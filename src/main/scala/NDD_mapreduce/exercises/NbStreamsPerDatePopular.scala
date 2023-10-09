@@ -10,10 +10,13 @@ object NbStreamsPerDatePopular extends MapReduceFunctions {
    * @return one result per input row, with unique key, the ranking position and the streaming date
    */
   def map(elt: Row): List[(String, Row)] = {
-    if (elt.asInstanceOf[SpotifyRow].pos > 3) return List[(String, Row)]()
-    val couple: (String,Row) =
-      (elt.asInstanceOf[SpotifyRow].streamingDate + " - " + elt.asInstanceOf[SpotifyRow].pos, new StringIntCouple(elt.toString, elt.asInstanceOf[SpotifyRow].nbStreams))
-    List[(String, Row)](couple)
+    if (elt.asInstanceOf[SpotifyRow].pos <= 3){
+      val couple: (String,Row) =
+        (elt.asInstanceOf[SpotifyRow].streamingDate.toString,
+          new StringIntCouple(elt.toString, elt.asInstanceOf[SpotifyRow].nbStreams))
+      List[(String, Row)](couple)
+    }
+    else List[(String, Row)]()
   }
 
   /**
